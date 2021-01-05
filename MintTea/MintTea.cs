@@ -1,4 +1,5 @@
 using BepInEx;
+using BepInEx.Configuration;
 using EntityStates;
 using MintTea;
 using RoR2;
@@ -11,9 +12,14 @@ namespace MyUserName {
     [BepInDependency("com.bepis.r2api")]
     [BepInPlugin("com.wellme.MintTea", "Mint tea", "0.0.0")]
     public class MintTea : BaseUnityPlugin {
+        public static ConfigEntry<float> MaxAirAccel { get; set; }
+        public static ConfigEntry<float> AirAccel { get; set; }
+
         private Dictionary<CharacterMotor, bool> leniencyFrames = new Dictionary<CharacterMotor, bool>();
 
         public void Awake() {
+            InitConfig();
+
             On.RoR2.CharacterMotor.PreMove += (orig, self, deltaTime) => {
                 PreMove(self, deltaTime);
             };
@@ -39,7 +45,7 @@ namespace MyUserName {
         private void PreMove(CharacterMotor self, float deltaTime) {
             if (self.hasEffectiveAuthority) {
                 if (leniencyFrames.TryGetValue(self, out bool val) && val || !self.isGrounded) {
-                    Squake.Shmove(self);
+                    Squake.Shmove(self, MaxAirAccel.Value, AirAccel.Value);
                 } else {
                     float acceleration = self.acceleration;
                     Vector3 direction = self.moveDirection;
@@ -91,6 +97,22 @@ namespace MyUserName {
         private void Set(object o, string field, object value) {
             FieldInfo fieldInfo = o.GetType().GetField(field, BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
             fieldInfo.SetValue(o, value);
+        }
+
+        private void InitConfig() {
+            MaxAirAccel = Config.Bind(
+                "Quake",
+                "Max air acceleration",
+                0.0451f * 2 * 10 * 3,
+                "I don't know what this number does. Default: 3"
+            );
+
+            AirAccel = Config.Bind(
+                "Quake",
+                "Air acceleration",
+                10f * 2 * 10 * 3,
+                "Higher values mean more speedgain while strafing. Default: 600"
+            );
         }
     }
 }

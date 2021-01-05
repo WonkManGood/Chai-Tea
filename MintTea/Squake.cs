@@ -9,10 +9,7 @@ using UnityEngine;
 namespace MintTea {
     class Squake {
 
-        private static float maxAirAccel = 0.0451f * 2;
-        private static float airAccel = 10f * 2;
-
-        public static void Shmove(CharacterMotor characterMotor) {
+        public static void Shmove(CharacterMotor characterMotor, float maxAirAccel, float airAccel) {
             float wishSpeed = characterMotor.moveDirection.sqrMagnitude > 1e-4 ? quake_getMoveSpeed(characterMotor) : 0;
 
             if (wishSpeed > maxAirAccel)
