@@ -1,4 +1,4 @@
-﻿using BepInEx;
+using BepInEx;
 using RoR2;
 using System.Reflection;
 using UnityEngine;
@@ -15,31 +15,28 @@ namespace MyUserName {
         }
         private void PreMove(CharacterMotor self, float deltaTime) {
             if (self.hasEffectiveAuthority) {
-                float num = self.acceleration;
+                float acceleration = self.acceleration;
                 if (!self.isGrounded) {
-                    num *= (self.disableAirControlUntilCollision ? 0f : self.airControl);
+                    acceleration *= (self.disableAirControlUntilCollision ? 0f : self.airControl);
                 }
-                Vector3 a = self.moveDirection;
+                Vector3 direction = self.moveDirection;
                 if (!self.isFlying) {
-                    a.y = 0f;
+                    direction.y = 0f;
                 }
                 if (Access<CharacterBody>(self, "body")?.isSprinting ?? false) {
-                    float magnitude = a.magnitude;
-                    if (magnitude < 1f && magnitude > 0f) {
-                        float d = 1f / a.magnitude;
-                        a *= d;
+                    if (0f < direction.magnitude && direction.magnitude < 1f) {
+                        direction /= direction.magnitude;
                     }
                 }
-                Vector3 target = a * self.walkSpeed;
+                Vector3 target = direction * self.walkSpeed;
                 if (!self.isFlying) {
                     target.y = self.velocity.y;
                 }
-                self.velocity = Vector3.MoveTowards(self.velocity, target, num * deltaTime);
+                self.velocity = Vector3.MoveTowards(self.velocity, target, acceleration * deltaTime);
                 if (self.useGravity) {
-                    ref float ptr = ref self.velocity.y;
-                    ptr += Physics.gravity.y * deltaTime;
+                    self.velocity.y += Physics.gravity.y * deltaTime;
                     if (self.isGrounded) {
-                        ptr = Mathf.Max(ptr, 0f);
+                        self.velocity.y = Mathf.Max(self.velocity.y, 0f);
                     }
                 }
             }
