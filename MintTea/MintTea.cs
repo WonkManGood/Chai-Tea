@@ -103,14 +103,14 @@ namespace MyUserName {
             MaxAirAccel = Config.Bind(
                 "Quake",
                 "Max air acceleration",
-                0.0451f * 2 * 10 * 3,
+                3f,
                 "I don't know what this number does. Default: 3"
             );
 
             AirAccel = Config.Bind(
                 "Quake",
                 "Air acceleration",
-                10f * 2 * 10 * 3,
+                600f,
                 "Higher values mean more speedgain while strafing. Default: 600"
             );
         }
