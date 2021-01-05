@@ -1,5 +1,8 @@
 ﻿using BepInEx;
+using EntityStates;
+using MintTea;
 using RoR2;
+using System;
 using System.Reflection;
 using UnityEngine;
 
@@ -14,7 +17,7 @@ namespace MyUserName {
             On.EntityStates.GenericCharacterMain.GatherInputs += (orig, self) => {
                 orig(self);
                 if(Access<bool>(self, "hasInputBank")) {
-                    Set(self, "jumpInputReceived", Access<InputBankTest>(self, "inputBank").jump.down);
+                    Set(self, "jumpInputReceived", AccessProperty<InputBankTest>(self, typeof(EntityState), "inputBank").jump.down);
                 }
             };
             On.EntityStates.GenericCharacterMain.ApplyJumpVelocity += (orig, characterMotor, characterBody, horizontalBonus, verticalBonus, vault) => {
@@ -32,24 +35,26 @@ namespace MyUserName {
         }
         private void PreMove(CharacterMotor self, float deltaTime) {
             if (self.hasEffectiveAuthority) {
-                float acceleration = self.acceleration;
                 if (!self.isGrounded) {
-                    acceleration *= (self.disableAirControlUntilCollision ? 0f : self.airControl);
-                }
-                Vector3 direction = self.moveDirection;
-                if (!self.isFlying) {
-                    direction.y = 0f;
-                }
-                if (Access<CharacterBody>(self, "body")?.isSprinting ?? false) {
-                    if (0f < direction.magnitude && direction.magnitude < 1f) {
-                        direction /= direction.magnitude;
+                    // acceleration *= (self.disableAirControlUntilCollision ? 0f : self.airControl);
+                    Squake.Shmove(self);
+                } else {
+                    float acceleration = self.acceleration;
+                    Vector3 direction = self.moveDirection;
+                    if (!self.isFlying) {
+                        direction.y = 0f;
                     }
+                    if (Access<CharacterBody>(self, "body")?.isSprinting ?? false) {
+                        if (0f < direction.magnitude && direction.magnitude < 1f) {
+                            direction /= direction.magnitude;
+                        }
+                    }
+                    Vector3 target = direction * self.walkSpeed;
+                    if (!self.isFlying) {
+                        target.y = self.velocity.y;
+                    }
+                    self.velocity = Vector3.MoveTowards(self.velocity, target, acceleration * deltaTime);
                 }
-                Vector3 target = direction * self.walkSpeed;
-                if (!self.isFlying) {
-                    target.y = self.velocity.y;
-                }
-                self.velocity = Vector3.MoveTowards(self.velocity, target, acceleration * deltaTime);
                 if (self.useGravity) {
                     self.velocity.y += Physics.gravity.y * deltaTime;
                     if (self.isGrounded) {
@@ -60,16 +65,28 @@ namespace MyUserName {
         }
         
         private T Access<T>(object o, string field) {
-            FieldInfo fieldInfo = o.GetType().GetField(field, BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            FieldInfo fieldInfo = o.GetType().GetField(field, BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            if (fieldInfo == null)
+                Logger.LogError("Unrecognized field " + field + " in class " + o.GetType().FullName);
             T value = (T) fieldInfo.GetValue(o);
             if (value == null) {
-                Logger.LogWarning("Value was null for field " + field);
+                Logger.LogWarning("Value was null for field " + field + " in class " + o.GetType().FullName);
+            }
+            return value;
+        }
+        private T AccessProperty<T>(object o, Type type, string field) {
+            PropertyInfo propertyInfo = type.GetProperty(field, BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.Instance);
+            if (propertyInfo == null)
+                Logger.LogError("Unrecognized property " + field + " in class " + type.FullName);
+            T value = (T) propertyInfo.GetValue(o);
+            if (value == null) {
+                Logger.LogWarning("Value was null for property " + field + " in class " + type.FullName);
             }
             return value;
         }
 
         private void Set(object o, string field, object value) {
-            FieldInfo fieldInfo = o.GetType().GetField(field, BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            FieldInfo fieldInfo = o.GetType().GetField(field, BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
             fieldInfo.SetValue(o, value);
         }
     }
