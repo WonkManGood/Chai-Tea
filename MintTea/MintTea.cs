@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-namespace MyUserName {
+namespace MintTea {
     [BepInDependency("com.bepis.r2api")]
     [BepInPlugin("com.wellme.MintTea", "Mint tea", "0.0.0")]
     public class MintTea : BaseUnityPlugin {
