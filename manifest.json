@@ -1,0 +1,10 @@
+{
+    "name": "Mint_tea",
+    "version_number": "0.0.0",
+    "website_url": "https://github.com/wellme/Mint-tea",
+    "description": "Adds quake-style movement to the game",
+    "dependencies": [
+        "bbepis-BepInExPack-5.3.1",
+        "tristanmcpherson-R2API-2.5.14"
+    ]
+}
