@@ -1,8 +1,9 @@
-﻿using BepInEx;
+using BepInEx;
 using EntityStates;
 using MintTea;
 using RoR2;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ namespace MyUserName {
     [BepInDependency("com.bepis.r2api")]
     [BepInPlugin("com.wellme.MintTea", "Mint tea", "0.0.0")]
     public class MintTea : BaseUnityPlugin {
+        private Dictionary<CharacterMotor, bool> leniencyFrames = new Dictionary<CharacterMotor, bool>();
+
         public void Awake() {
             On.RoR2.CharacterMotor.PreMove += (orig, self, deltaTime) => {
                 PreMove(self, deltaTime);
@@ -24,7 +27,7 @@ namespace MyUserName {
                 Vector3 velocity = characterMotor.velocity;
                 orig(characterMotor, characterBody, horizontalBonus, verticalBonus, vault);
                 Vector3 horizontalBonusVelocity = characterMotor.moveDirection * characterBody.moveSpeed * horizontalBonus;
-                if (characterMotor.velocity.sqrMagnitude > horizontalBonusVelocity.sqrMagnitude) {
+                if (characterMotor.velocity.sqrMagnitude < horizontalBonusVelocity.sqrMagnitude) {
                     horizontalBonusVelocity.y = characterMotor.velocity.y;
                     characterMotor.velocity = horizontalBonusVelocity;
                 } else {
@@ -35,8 +38,7 @@ namespace MyUserName {
         }
         private void PreMove(CharacterMotor self, float deltaTime) {
             if (self.hasEffectiveAuthority) {
-                if (!self.isGrounded) {
-                    // acceleration *= (self.disableAirControlUntilCollision ? 0f : self.airControl);
+                if (leniencyFrames.TryGetValue(self, out bool val) && val || !self.isGrounded) {
                     Squake.Shmove(self);
                 } else {
                     float acceleration = self.acceleration;
@@ -61,6 +63,7 @@ namespace MyUserName {
                         self.velocity.y = Mathf.Max(self.velocity.y, 0f);
                     }
                 }
+                leniencyFrames[self] = !self.isGrounded;
             }
         }
         
