@@ -11,6 +11,12 @@ namespace MyUserName {
             On.RoR2.CharacterMotor.PreMove += (orig, self, deltaTime) => {
                 PreMove(self, deltaTime);
             };
+            On.EntityStates.GenericCharacterMain.GatherInputs += (orig, self) => {
+                orig(self);
+                if(Access<bool>(self, "hasInputBank")) {
+                    Set(self, "jumpInputReceived", Access<InputBankTest>(self, "inputBank").jump.down);
+                }
+            };
             On.EntityStates.GenericCharacterMain.ApplyJumpVelocity += (orig, characterMotor, characterBody, horizontalBonus, verticalBonus, vault) => {
                 Vector3 velocity = characterMotor.velocity;
                 orig(characterMotor, characterBody, horizontalBonus, verticalBonus, vault);
@@ -60,6 +66,11 @@ namespace MyUserName {
                 Logger.LogWarning("Value was null for field " + field);
             }
             return value;
+        }
+
+        private void Set(object o, string field, object value) {
+            FieldInfo fieldInfo = o.GetType().GetField(field, BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            fieldInfo.SetValue(o, value);
         }
     }
 }
