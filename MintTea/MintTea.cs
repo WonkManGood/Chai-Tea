@@ -16,6 +16,7 @@ namespace MintTea {
         private Dictionary<CharacterMotor, bool> leniencyFrames = new Dictionary<CharacterMotor, bool>();
 
         public void Awake() {
+            Reflection.Logger = Logger;
             Configuration.InitConfig(Config);
 
             On.RoR2.CharacterMotor.PreMove += (orig, self, deltaTime) => {
@@ -23,8 +24,8 @@ namespace MintTea {
             };
             On.EntityStates.GenericCharacterMain.GatherInputs += (orig, self) => {
                 orig(self);
-                if(Access<bool>(self, "hasInputBank")) {
-                    Set(self, "jumpInputReceived", AccessProperty<InputBankTest>(self, typeof(EntityState), "inputBank").jump.down);
+                if(Reflection.Access<bool>(self, "hasInputBank")) {
+                    Reflection.Set(self, "jumpInputReceived", Reflection.AccessProperty<InputBankTest>(self, typeof(EntityState), "inputBank").jump.down);
                 }
             };
             On.EntityStates.GenericCharacterMain.ApplyJumpVelocity += (orig, characterMotor, characterBody, horizontalBonus, verticalBonus, vault) => {
@@ -50,7 +51,7 @@ namespace MintTea {
                     if (!self.isFlying) {
                         direction.y = 0f;
                     }
-                    if (Access<CharacterBody>(self, "body")?.isSprinting ?? false) {
+                    if (Reflection.Access<CharacterBody>(self, "body")?.isSprinting ?? false) {
                         if (0f < direction.magnitude && direction.magnitude < 1f) {
                             direction /= direction.magnitude;
                         }
@@ -69,32 +70,6 @@ namespace MintTea {
                 }
                 leniencyFrames[self] = !self.isGrounded;
             }
-        }
-        
-        private T Access<T>(object o, string field) {
-            FieldInfo fieldInfo = o.GetType().GetField(field, BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-            if (fieldInfo == null)
-                Logger.LogError("Unrecognized field " + field + " in class " + o.GetType().FullName);
-            T value = (T) fieldInfo.GetValue(o);
-            if (value == null) {
-                Logger.LogWarning("Value was null for field " + field + " in class " + o.GetType().FullName);
-            }
-            return value;
-        }
-        private T AccessProperty<T>(object o, Type type, string field) {
-            PropertyInfo propertyInfo = type.GetProperty(field, BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.Instance);
-            if (propertyInfo == null)
-                Logger.LogError("Unrecognized property " + field + " in class " + type.FullName);
-            T value = (T) propertyInfo.GetValue(o);
-            if (value == null) {
-                Logger.LogWarning("Value was null for property " + field + " in class " + type.FullName);
-            }
-            return value;
-        }
-
-        private void Set(object o, string field, object value) {
-            FieldInfo fieldInfo = o.GetType().GetField(field, BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-            fieldInfo.SetValue(o, value);
         }
     }
 }
