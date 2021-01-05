@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MintTea", "MintTea\MintTea.csproj", "{57A82728-34F5-4024-9C24-40E2824C6BDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57A82728-34F5-4024-9C24-40E2824C6BDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57A82728-34F5-4024-9C24-40E2824C6BDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57A82728-34F5-4024-9C24-40E2824C6BDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57A82728-34F5-4024-9C24-40E2824C6BDE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D742E33B-9829-46F3-BB7F-D24C43552608}
+	EndGlobalSection
+EndGlobal
