@@ -11,6 +11,18 @@ namespace MyUserName {
             On.RoR2.CharacterMotor.PreMove += (orig, self, deltaTime) => {
                 PreMove(self, deltaTime);
             };
+            On.EntityStates.GenericCharacterMain.ApplyJumpVelocity += (orig, characterMotor, characterBody, horizontalBonus, verticalBonus, vault) => {
+                Vector3 velocity = characterMotor.velocity;
+                orig(characterMotor, characterBody, horizontalBonus, verticalBonus, vault);
+                Vector3 horizontalBonusVelocity = characterMotor.moveDirection * characterBody.moveSpeed * horizontalBonus;
+                if (characterMotor.velocity.sqrMagnitude > horizontalBonusVelocity.sqrMagnitude) {
+                    horizontalBonusVelocity.y = characterMotor.velocity.y;
+                    characterMotor.velocity = horizontalBonusVelocity;
+                } else {
+                    velocity.y = characterMotor.velocity.y;
+                    characterMotor.velocity = velocity;
+                }
+            };
         }
         private void PreMove(CharacterMotor self, float deltaTime) {
             if (self.hasEffectiveAuthority) {
