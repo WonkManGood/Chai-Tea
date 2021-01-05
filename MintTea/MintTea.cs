@@ -1,4 +1,4 @@
-using BepInEx;
+﻿using BepInEx;
 using RoR2;
 using System.Reflection;
 using UnityEngine;
@@ -9,7 +9,6 @@ namespace MyUserName {
     public class MintTea : BaseUnityPlugin {
         public void Awake() {
             On.RoR2.CharacterMotor.PreMove += (orig, self, deltaTime) => {
-                Logger.LogInfo(self.moveDirection);
                 PreMove(self, deltaTime);
             };
         }
