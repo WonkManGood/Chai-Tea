@@ -24,7 +24,7 @@ namespace MintTea {
             if (!(addSpeed > 0))
                 return;
 
-            float accelSpeed = airAccel * wishSpeed * 0.05f;
+            float accelSpeed = airAccel * wishSpeed;
             if (accelSpeed > addSpeed)
                 accelSpeed = addSpeed;
 

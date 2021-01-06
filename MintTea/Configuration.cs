@@ -22,8 +22,8 @@ namespace MintTea {
             AirAccel = configFile.Bind(
                 "Quake",
                 "Air acceleration",
-                600f,
-                "Higher values mean more speedgain while strafing. Default: 600"
+                30f,
+                "Higher values mean more speedgain while strafing. Default: 30"
             );
         }
     }
