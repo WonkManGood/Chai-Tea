@@ -22,12 +22,16 @@ namespace MintTea {
             On.RoR2.CharacterMotor.PreMove += (orig, self, deltaTime) => {
                 PreMove(self, deltaTime);
             };
-            On.EntityStates.GenericCharacterMain.GatherInputs += (orig, self) => {
-                orig(self);
-                if(Reflection.Access<bool>(self, "hasInputBank")) {
-                    Reflection.Set(self, "jumpInputReceived", Reflection.AccessProperty<InputBankTest>(self, typeof(EntityState), "inputBank").jump.down);
-                }
-            };
+
+            if (Configuration.AutoHop.Value) {
+                On.EntityStates.GenericCharacterMain.GatherInputs += (orig, self) => {
+                    orig(self);
+                    if (Reflection.Access<bool>(self, "hasInputBank")) {
+                        Reflection.Set(self, "jumpInputReceived", Reflection.AccessProperty<InputBankTest>(self, typeof(EntityState), "inputBank").jump.down);
+                    }
+                };
+            }
+
             On.EntityStates.GenericCharacterMain.ApplyJumpVelocity += (orig, characterMotor, characterBody, horizontalBonus, verticalBonus, vault) => {
                 Vector3 velocity = characterMotor.velocity;
                 orig(characterMotor, characterBody, horizontalBonus, verticalBonus, vault);

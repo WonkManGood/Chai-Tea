@@ -10,6 +10,7 @@ namespace MintTea {
 
         public static ConfigEntry<float> MaxAirAccel { get; set; }
         public static ConfigEntry<float> AirAccel { get; set; }
+        public static ConfigEntry<bool> AutoHop { get; set; }
 
         public static void InitConfig(ConfigFile configFile) {
             MaxAirAccel = configFile.Bind(
@@ -24,6 +25,13 @@ namespace MintTea {
                 "Air acceleration",
                 30f,
                 "Higher values mean more speedgain while strafing. Default: 30"
+            );
+
+            AutoHop = configFile.Bind(
+                "Quake",
+                "Auto hop",
+                true,
+                "Automatically jump when landing while holding the jump key. Default: true"
             );
         }
     }
