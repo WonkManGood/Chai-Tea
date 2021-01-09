@@ -13,7 +13,7 @@ namespace MintTea {
     [BepInPlugin("com.wellme.MintTea", "Mint tea", "0.0.0")]
     public class MintTea : BaseUnityPlugin {
 
-        private Dictionary<CharacterMotor, bool> leniencyFrames = new Dictionary<CharacterMotor, bool>();
+        private Dictionary<CharacterMotor, MintTeaInfo> info = new Dictionary<CharacterMotor, MintTeaInfo>();
 
         public void Awake() {
             Reflection.Logger = Logger;
@@ -47,7 +47,7 @@ namespace MintTea {
         }
         private void PreMove(CharacterMotor self, float deltaTime) {
             if (self.hasEffectiveAuthority) {
-                if (leniencyFrames.TryGetValue(self, out bool val) && val || !self.isGrounded) {
+                if (GetInfo(self).LeniencyFrame || !self.isGrounded) {
                     Squake.Shmove(self, Configuration.MaxAirAccel.Value, Configuration.AirAccel.Value);
                 } else {
                     float acceleration = self.acceleration;
@@ -72,8 +72,21 @@ namespace MintTea {
                         self.velocity.y = Mathf.Max(self.velocity.y, 0f);
                     }
                 }
-                leniencyFrames[self] = !self.isGrounded;
+
+                GetInfo(self).LeniencyFrame = !self.isGrounded;
             }
+        }
+
+
+        MintTeaInfo GetInfo(CharacterMotor motor) {
+            if (info.TryGetValue(motor, out MintTeaInfo val)) {
+                return val;
+            }
+
+            return info[motor] = new MintTeaInfo {
+                Motor = motor,
+                LeniencyFrame = false
+            };
         }
     }
 }
