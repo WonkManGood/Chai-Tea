@@ -34,7 +34,7 @@ namespace MintTea {
 
             On.EntityStates.GenericCharacterMain.ProcessJump += (orig, self) => {
                 CharacterMotor motor = GetMotor(self);
-                if (motor?.isGrounded ?? false && (GetInfo(motor)?.GroundedJump ?? false)) {
+                if ((motor?.isGrounded ?? false) && (GetInfo(motor)?.GroundedJump ?? false)) {
                     Reflection.Set(self, "jumpInputReceived", true);
                 }
                 orig(self);
