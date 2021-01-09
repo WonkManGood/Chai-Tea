@@ -9,5 +9,6 @@ namespace MintTea {
     class MintTeaInfo {
         public CharacterMotor Motor { get; set; }
         public bool LeniencyFrame { get; set; }
+        public bool GroundedJump { get; set; }
     }
 }

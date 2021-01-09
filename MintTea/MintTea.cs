@@ -27,10 +27,18 @@ namespace MintTea {
                 On.EntityStates.GenericCharacterMain.GatherInputs += (orig, self) => {
                     orig(self);
                     if (Reflection.Access<bool>(self, "hasInputBank")) {
-                        Reflection.Set(self, "jumpInputReceived", Reflection.AccessProperty<InputBankTest>(self, typeof(EntityState), "inputBank").jump.down);
+                        GetInfo(GetMotor(self)).GroundedJump = Reflection.AccessProperty<InputBankTest>(self, typeof(EntityState), "inputBank").jump.down;
                     }
                 };
             }
+
+            On.EntityStates.GenericCharacterMain.ProcessJump += (orig, self) => {
+                CharacterMotor motor = GetMotor(self);
+                if (motor?.isGrounded ?? false && (GetInfo(motor)?.GroundedJump ?? false)) {
+                    Reflection.Set(self, "jumpInputReceived", true);
+                }
+                orig(self);
+            };
 
             On.EntityStates.GenericCharacterMain.ApplyJumpVelocity += (orig, characterMotor, characterBody, horizontalBonus, verticalBonus, vault) => {
                 Vector3 velocity = characterMotor.velocity;
@@ -78,8 +86,8 @@ namespace MintTea {
         }
 
 
-        MintTeaInfo GetInfo(CharacterMotor motor) {
-            if (info.TryGetValue(motor, out MintTeaInfo val)) {
+        private MintTeaInfo GetInfo(CharacterMotor motor) {
+            if (info.TryGetValue(motor, out MintTeaInfo val) || motor == null) {
                 return val;
             }
 
@@ -87,6 +95,10 @@ namespace MintTea {
                 Motor = motor,
                 LeniencyFrame = false
             };
+        }
+
+        private static CharacterMotor GetMotor(GenericCharacterMain genericCharacterMain) {
+            return Reflection.AccessProperty<CharacterMotor>(genericCharacterMain, typeof(EntityState), "characterMotor");
         }
     }
 }
