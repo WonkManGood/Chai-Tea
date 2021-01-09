@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace MintTea {
     [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.wellme.MintTea", "Mint tea", "0.1.0")]
+    [BepInPlugin("com.wellme.MintTea", "Mint tea", "0.1.1")]
     public class MintTea : BaseUnityPlugin {
 
         private Dictionary<CharacterMotor, MintTeaInfo> info = new Dictionary<CharacterMotor, MintTeaInfo>();
