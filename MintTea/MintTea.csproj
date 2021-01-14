@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="DefaultMovement.cs" />
     <Compile Include="MintTea.cs" />
     <Compile Include="MintTeaInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
