@@ -29,8 +29,8 @@ namespace MintTea {
             if (Configuration.AutoHop.Value) {
                 On.EntityStates.GenericCharacterMain.GatherInputs += (orig, self) => {
                     orig(self);
-                    if (Reflection.Access<bool>(self, "hasInputBank")) {
-                        GetInfo(GetMotor(self)).GroundedJump = Reflection.AccessProperty<InputBankTest>(self, typeof(EntityState), "inputBank").jump.down;
+                    if (Reflection.Access<bool>(self, "hasInputBank") && GetMotor(self) is CharacterMotor motor) {
+                        GetInfo(motor).GroundedJump = Reflection.AccessProperty<InputBankTest>(self, typeof(EntityState), "inputBank").jump.down;
                     }
                 };
             }
@@ -56,6 +56,7 @@ namespace MintTea {
                 }
             };
         }
+
         private void PreMove(CharacterMotor self, float deltaTime) {
             if (self.hasEffectiveAuthority) {
                 if (GetInfo(self).LeniencyFrame || !self.isGrounded) {
@@ -90,9 +91,10 @@ namespace MintTea {
 
 
         private MintTeaInfo GetInfo(CharacterMotor motor) {
-            if (info.TryGetValue(motor, out MintTeaInfo val) || motor == null) {
+            if (motor == null)
+                return null;
+            if (info.TryGetValue(motor, out MintTeaInfo val))
                 return val;
-            }
 
             return info[motor] = new MintTeaInfo {
                 Motor = motor,
