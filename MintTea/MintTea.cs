@@ -23,7 +23,12 @@ namespace MintTea {
             Configuration.InitConfig(Config);
 
             On.RoR2.CharacterMotor.PreMove += (orig, self, deltaTime) => {
-                PreMove(self, deltaTime);
+                Vector3 velocity = self.velocity;
+                orig(self, deltaTime);
+                if (PlayerCharacterMasterController.instances[0]?.master?.GetBody()?.characterMotor == self) {
+                    self.velocity = velocity;
+                    PreMove(self, deltaTime);
+                }
             };
 
             if (Configuration.AutoHop.Value) {
