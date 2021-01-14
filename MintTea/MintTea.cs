@@ -2,6 +2,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using EntityStates;
 using MintTea;
+using R2API.Utils;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ using System.Reflection;
 using UnityEngine;
 
 namespace MintTea {
+
+    [NetworkCompatibility(CompatibilityLevel.NoNeedForSync)]
     [BepInDependency("com.bepis.r2api")]
     [BepInPlugin("com.wellme.MintTea", "Mint tea", "0.1.1")]
     public class MintTea : BaseUnityPlugin {
