@@ -65,7 +65,7 @@ namespace MintTea {
         private void PreMove(CharacterMotor self, float deltaTime) {
             if (self.hasEffectiveAuthority) {
                 if (GetInfo(self).LeniencyFrame || !self.isGrounded) {
-                    Squake.Shmove(self, Configuration.MaxAirAccel.Value, Configuration.AirAccel.Value);
+                    Quake.AirMovement(self, Configuration.MaxAirAccel.Value, Configuration.AirAccel.Value);
                 } else {
                     DefaultMovement.GroundMovement(self, deltaTime);
                 }

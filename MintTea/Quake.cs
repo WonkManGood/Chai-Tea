@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MintTea {
-    class Squake {
+    class Quake {
 
-        public static void Shmove(CharacterMotor characterMotor, float maxAirAccel, float airAccel) {
+        public static void AirMovement(CharacterMotor characterMotor, float maxAirAccel, float airAccel) {
             float wishSpeed = characterMotor.moveDirection.sqrMagnitude > 1e-4 ? quake_getMoveSpeed(characterMotor) : 0;
 
             if (wishSpeed > maxAirAccel)
