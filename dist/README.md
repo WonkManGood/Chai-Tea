@@ -9,6 +9,11 @@ To contribute, visit the [project's GitHub](https://github.com/wellme/Mint-tea)
 
 # Version history
 
+## v0.1.2
+Bug fixes and stability improvements
+Improved compatibility
+Flagged the mod as client-side only
+
 ## v0.1.0
 Added autohop setting
 Fixed autohopping interaction with multiple jumps
