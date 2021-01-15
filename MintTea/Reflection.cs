@@ -15,9 +15,6 @@ namespace MintTea {
             if (fieldInfo == null)
                 Logger?.LogError("Unrecognized field " + field + " in class " + o.GetType().FullName);
             T value = (T)fieldInfo.GetValue(o);
-            if (value == null) {
-                Logger?.LogWarning("Value was null for field " + field + " in class " + o.GetType().FullName);
-            }
             return value;
         }
         public static T AccessProperty<T>(object o, Type type, string field) {
@@ -25,9 +22,6 @@ namespace MintTea {
             if (propertyInfo == null)
                 Logger?.LogError("Unrecognized property " + field + " in class " + type.FullName);
             T value = (T)propertyInfo.GetValue(o);
-            if (value == null) {
-                Logger?.LogWarning("Value was null for property " + field + " in class " + type.FullName);
-            }
             return value;
         }
 
