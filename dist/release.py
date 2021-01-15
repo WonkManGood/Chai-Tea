@@ -6,7 +6,7 @@ import json
 bin = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, "MintTea", "bin", "Debug", "MintTea.dll"))
 manifest = os.path.abspath(os.path.join(os.path.dirname(__file__), "manifest.json"))
 icon = os.path.abspath(os.path.join(os.path.dirname(__file__), "icon.png"))
-readme = os.path.abspath(os.path.join(os.path.dirname(__file__), "readme.md"))
+readme = os.path.abspath(os.path.join(os.path.dirname(__file__), "README.md"))
 
 source = os.path.join(os.path.dirname(__file__), os.pardir, "MintTea/MintTea.cs")
 
