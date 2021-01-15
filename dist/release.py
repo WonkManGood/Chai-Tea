@@ -30,9 +30,13 @@ def assertSource(version):
         return version in str(file.read())
     return True
 
-def assertManifest(version):
+def updateManifest(version):
     with open(manifest, "r") as file:
-        return json.loads(file.read())["version_number"] == version
+        content = json.loads(file.read())
+        content["version_number"] = version
+    with open(manifest, "w") as file:
+        file.write(json.dumps(content, indent = 4))
+        return True
     return False
 
 def assertReadme(version):
@@ -67,7 +71,7 @@ def main():
     if not b:
         print("Wrong source")
     shouldRelease = shouldRelease and b
-    b = assertManifest(version)
+    b = updateManifest(version)
     if not b:
         print("Wrong manifest")
     shouldRelease = shouldRelease and b
