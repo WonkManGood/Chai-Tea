@@ -81,7 +81,7 @@ def main():
     if shouldRelease:
         pack(version)
         os.system("git commit -am \"Release " + version + "\"")
-        os.system("git tag v" + version)
+        os.system("git tag v" + version + " -f")
         os.system("git push origin master v" + version)
 
 if __name__ == "__main__":
