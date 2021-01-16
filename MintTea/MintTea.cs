@@ -25,7 +25,8 @@ namespace MintTea {
             On.RoR2.CharacterMotor.PreMove += (orig, self, deltaTime) => {
                 Vector3 velocity = self.velocity;
                 orig(self, deltaTime);
-                if (PlayerCharacterMasterController.instances[0]?.master?.GetBody()?.characterMotor == self) {
+                Logger.LogWarning("Checking motor: " + self.name);
+                if (IsPlayerControlled(self)) {
                     self.velocity = velocity;
                     PreMove(self, deltaTime);
                 }
@@ -95,6 +96,13 @@ namespace MintTea {
 
         private static CharacterMotor GetMotor(GenericCharacterMain genericCharacterMain) {
             return Reflection.AccessProperty<CharacterMotor>(genericCharacterMain, typeof(EntityState), "characterMotor");
+        }
+
+        private bool IsPlayerControlled(CharacterMotor motor) {
+            foreach (var controller in PlayerCharacterMasterController.instances)
+                if (controller?.master?.GetBody()?.characterMotor == motor)
+                    return true;
+            return false;
         }
     }
 }
