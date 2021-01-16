@@ -1,6 +1,6 @@
 {
     "name": "Mint_tea",
-    "version_number": "0.1.2",
+    "version_number": "0.1.3",
     "website_url": "https://github.com/wellme/Mint-tea",
     "description": "Adds quake-style movement to the game",
     "dependencies": [
