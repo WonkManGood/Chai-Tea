@@ -25,7 +25,6 @@ namespace MintTea {
             On.RoR2.CharacterMotor.PreMove += (orig, self, deltaTime) => {
                 Vector3 velocity = self.velocity;
                 orig(self, deltaTime);
-                Logger.LogWarning("Checking motor: " + self.name);
                 if (IsPlayerControlled(self)) {
                     self.velocity = velocity;
                     PreMove(self, deltaTime);
