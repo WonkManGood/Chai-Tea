@@ -13,7 +13,7 @@ namespace MintTea {
 
     [NetworkCompatibility(CompatibilityLevel.NoNeedForSync)]
     [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.wellme.MintTea", "Mint tea", "0.1.3")]
+    [BepInPlugin("com.wellme.MintTea", "Mint tea", "0.1.4")]
     public class MintTea : BaseUnityPlugin {
 
         private Dictionary<CharacterMotor, MintTeaInfo> info = new Dictionary<CharacterMotor, MintTeaInfo>();
